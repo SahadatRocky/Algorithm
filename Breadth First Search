@@ -1,0 +1,102 @@
+#include<bits/stdc++.h>
+using namespace std;
+const int size = 100;
+const int WHITE= 0;
+const int GREY = -1;
+const int BLACK = 1;
+ 
+vector<int> G[size];
+queue<int> q;
+int visited[size],level[size],parent[size];
+ 
+ 
+ 
+void BFS(int src,int dstn){
+ 
+        while(!q.empty())
+                q.pop();
+ 
+                memset(visited,0,sizeof(visited));
+                  memset(level,0,sizeof(level));
+                 memset(parent,0,sizeof(parent));
+ 
+                   q.push(src);
+                    level[src]=0;
+                    visited[src]=GREY;
+ 
+                    cout<<"BFS:"<<endl;
+                    cout<<src<<" ";
+ 
+               int u,v;
+              while(!q.empty()){
+                    u=q.front();
+                     q.pop();
+                  for(int i=0;i<G[u].size();i++){
+                     v=G[u][i];
+                     if(visited[v]==WHITE){
+                         cout<<v<<" ";
+                         parent[v]=u;
+                         level[v]=level[u]+1;
+                         visited[v]=GREY;
+                         q.push(v);
+                     }
+ 
+                  }
+                  visited[u]=BLACK;
+              }
+              cout<<"Distance from src to any node:"<<endl;
+              for(int i=1;i<=dstn;i++){
+                cout<<src<<" "<<i<<" "<<level[i]<<endl;
+ 
+                for(int i=1;i<=dstn;i++){
+                    cout<<i<<" =>"<<parent[i]<<endl;
+                }
+                cout<<"shortest path"<<src<<"to"<<dstn<<":"<<dstn<<" ";
+ 
+                int x=dstn;
+                while(x!=src){
+                        cout<<parent[x];
+ 
+                      x=parent[x];
+ 
+ 
+                }
+ 
+    }
+}
+ 
+ 
+ 
+ 
+ 
+int main(){
+ 
+  int N,E,u,v,src,dstn;
+   cout<<"How many nodes and edges?"<<endl;
+   cin>>N>>E;
+   cout<<"input connected edges (u and v):"<<endl;
+   for(int i=0;i<E;i++){
+     scanf("%d %d",&u,&v);
+ 
+            src=u;
+         G[u].push_back(v);
+         G[v].push_back(u);
+         }
+           cout<<"adjacent list:";
+         for(int u=1;u<=N;u++){
+                cout<<u<<"->";
+          for(int v=0;v<G[u].size();v++){
+ 
+            cout<<G[u][v]<<" ";
+          }
+          cout<<endl;
+   }
+         cout<<"Enter the src and dstn :"<<endl;
+        cin>>src>>dstn;
+ 
+         BFS(src,dstn);
+ 
+ 
+ return 0;
+}
+ 
