@@ -1,0 +1,97 @@
+#include<bits/stdc++.h>
+using namespace std;
+const int size=100;
+#define INF 10000000000000000
+#define pii pair<int,int>
+vector< pii > G[size];
+priority_queue< pii, vector< pii >, greater < pii > > pq;
+int dis[size], parent[size], path[size];
+ 
+void Dijkstra(int src)
+{
+	memset(parent, -1, sizeof(parent));
+ 
+	pq.push(pii(0, src));
+	dis[src] = 0;
+	parent[src] = 1;
+ 
+	pii tmp;
+	int  u, v, costUV;
+	while (!pq.empty())
+	{
+		tmp = pq.top();
+		u = tmp.second;
+		pq.pop();
+ 
+		for (int i = 0; i < G[u].size(); i++)
+		{
+			v = G[u][i].first;
+			costUV = G[u][i].second;
+ 
+			if (dis[u] + costUV < dis[v])
+			{
+				dis[v] = dis[u] + costUV;
+				parent[v] = u;
+				pq.push(pii(dis[v], v));
+			}
+		}
+	}
+}
+ 
+ 
+ 
+int main(){
+ 
+  int  N,E, n, m, u, v, w, p, child, S, D;
+ 
+	//scanf("%d %d", &n, &m);
+	cin>>N>>E;
+	for (int i = 0; i <= N; i++)
+		dis[i] = INF;
+ 
+	for (int i = 0; i < E; i++)
+	{
+		scanf("%d %d %d", &u, &v, &w);
+		G[u].push_back(pii(v, w));
+		G[v].push_back(pii(u, w));
+	}
+ 
+	cin >> S >> D;
+ 
+	Dijkstra(S);
+ 
+	if (dis[D] == INF)
+	{
+		printf("Goal Not Found!\n");
+		return 0;
+	}
+	cout << "Cost to Goal Node: " << dis[D] << endl;
+ 
+	cout << "Cost of others node from the source node:\n";
+ 
+	for(int i = 1; i <= N; i++)
+		cout << i << " = " << dis[i] << endl;
+ 
+	child = D;
+	int i = 1;
+	while (1)
+	{
+		p = parent[child];
+ 
+		path[i] = p;
+ 
+		if (p == 1)
+			break;
+ 
+		child = p;
+		i++;
+	}
+	path[0] = N;
+ 
+	cout << "Shortest path: ";
+	for (int j = i; j >= 0; j--)
+		printf("%d ", path[j]);
+ 
+ 
+ return 0;
+}
