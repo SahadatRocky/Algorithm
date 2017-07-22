@@ -1,0 +1,129 @@
+#include<iostream>
+#include<cstdio>
+#include<vector>
+#include<cmath>
+#include<algorithm>
+#include<cstring>
+#include<string>
+#include<stack>
+#include<queue>
+#define mx 100000 + 10
+using namespace std;
+vector< vector<int> > adj_list;
+vector< vector<int> > cost;
+long long dis[mx];
+int par[mx];
+int n, edge;
+class node  {
+public:
+    int u;
+    long long w;
+    node(int a, long long b):u(a), w(b) {}
+    bool operator < (const node &a) const{
+        return a.w < w;
+    }
+};
+ 
+long long run_dijkstra(int src, int dest)    {   //dest = destination
+    memset(dis, 63, sizeof(dis));
+    priority_queue<node> pq;
+    pq.push(node(src, 0));
+    dis[src] = 0;
+    while (!pq.empty()) {
+        int u = pq.top().u;
+        if (u == dest) {
+            return dis[dest];
+        }
+        pq.pop();
+        int u_len = adj_list[u].size();
+        for (int i = 0; i < u_len; i++) {
+            int v = adj_list[u][i];
+            if (dis[v] > (dis[u] + cost[u][i])) {
+                dis[v] = dis[u] + cost[u][i];
+                pq.push(node(v, dis[v]));
+                par[v] = u;
+            }
+        }
+    }
+    return -1;
+}
+ 
+int main()  {
+    std::ios_base::sync_with_stdio(false);
+    /*
+    int ara1[10];
+    long long ara2[10];
+    memset(ara1, 63, sizeof(ara1));
+    memset(ara2, 63, sizeof(ara1));
+    cout << ara1[0] << "\n";
+    cout << ara2[0] << "\n";
+    cout << ((long long)1 << 40) << "\n";
+    */
+    /*
+    priority_queue<node> pq1;
+    pq1.push(node(10, 4));
+    pq1.push(node(15, 7));
+    pq1.push(node(3, 2));
+    cout << pq1.top().u << " " << pq1.top().w << "\n";
+    pq1.pop();
+    cout << pq1.top().u << " " << pq1.top().w << "\n";
+    pq1.pop();
+    cout << pq1.top().u << " " << pq1.top().w << "\n";
+    pq1.pop();
+    */
+ 
+    cin >> n >> edge;
+    adj_list.resize(n + 1, vector<int>(0));
+    cost.resize(n +1, vector<int>(0));
+    for (int i = 0; i < edge; i++)  {
+        int u, v, w;
+        cin >> u >> v >> w;
+        adj_list[u].push_back(v);
+        adj_list[v].push_back(u);
+        cost[u].push_back(w);
+        cost[v].push_back(w);
+    }
+    /*
+    cout << "adj_list : \n";
+    for (int i = 1; i <= node; i++) {
+        int adj_list_len = adj_list[i].size();
+        cout << i << " :  ";
+        for (int j = 0; j < adj_list_len; j++)  {
+            cout << adj_list[i][j] << " ";
+        }
+        cout << "\n";
+        cout << i << " :  ";
+        for (int j = 0; j < adj_list_len; j++)  {
+            cout << cost[i][j] << " ";
+        }
+        cout << "\n";
+    }
+    */
+    int src, dest;
+    cin >> src >> dest;
+    long long ans = run_dijkstra(src, dest);
+    if (ans == -1)  {
+        cout << ans << "\n";
+    }
+    else    {
+        int u = dest;
+        vector<int> ans;
+        while (1)   {
+            if (u == src) {
+                ans.push_back(1);
+                break;
+            }
+            ans.push_back(u);
+            u = par[u];
+        }
+        int size_ans = ans.size();
+        for (int i = size_ans - 1; i >= 0; i--) {
+            if (i != size_ans - 1)  {
+                cout << " ";
+            }
+            cout << ans[i];
+        }
+        cout << "\n";
+    }
+    return 0;
+}
