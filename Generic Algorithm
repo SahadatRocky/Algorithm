@@ -1,0 +1,143 @@
+#include<iostream>
+#include<cstring>
+#include<cmath>
+#include<cstdlib>
+using namespace std;
+string crossover(string s1, string s2,int point)
+{
+    int len=s1.length()-point;
+    char *d1 = new char[len];
+    char *d2 = new char[len];
+    int temp;
+    string s=s1;
+    for(int i=point;i<s1.length();i++)
+    {
+        s[i]=s2[i];
+    }
+   /*
+    for(int i=len-1;i<str(s1);i++)
+    {
+        s2[i]=d1[len-1-i];
+        s1[i]=d2[len-1-i];
+    }*/
+    return s;
+}
+int binaryconverter(string str)
+{
+    int sum=0;
+    int len=str.length();
+    for(int i=0;i<len;i++)
+    {
+        if(str[i]=='1')
+            sum=sum+pow(2,len-1-i);
+    }
+    return sum;
+}
+int main()
+{
+ 
+    string population[4]={"01101","11000","01000","10011"};
+    string newpopulation[4];
+ 
+    int *crossoverpoint=new int[4];
+    int *crossoverpartner=new int[4];
+    int *value=new int[4];
+    int *value1=new int[4];
+    for(int i=0;i<4;i++)
+    {
+        crossoverpoint[i]=rand()%4+1;
+        crossoverpartner[i]=rand()%4;
+    }
+    for(int i=0;i<4;i++)
+    {
+        value[i]=binaryconverter(population[i]);
+       newpopulation[i]=crossover(population[i],population[crossoverpartner[i]],crossoverpoint[i]);
+        value1[i]=binaryconverter(newpopulation[i]);
+    }
+ 
+    int sum=0;
+ 
+    for(int i=0;i<4;i++)
+        sum=value[i]*value[i]+sum;
+ 
+    int avg=sum/4;
+     float sum1=0.0;
+     float avg1;
+     int avg2;
+    int Max=0;
+    int Max2=0;
+    float Max1=0;
+    int sum2=0;
+    for(int i=0;i<4;i++)
+    {
+        float square=(value[i]*value[i])/float(avg);
+        cout<<population[i]<<"     "<<value[i]<<"        "<<value[i]*value[i]<<"       "<<square<<"->"<<round(square)<<"     "<<endl;
+        cout<<endl;
+        sum1=sum1+square;
+        sum2= sum2 + round(square);
+        avg1=sum1/4.0;
+        avg2=sum2/4;
+ 
+        if(Max<value[i]*value[i])
+            Max=value[i]*value[i];
+ 
+            if(Max1<square)
+            Max1=square;
+ 
+         if(Max2<round(square))
+            Max2=round(square);
+ 
+ 
+    }
+    cout<<endl<<endl;
+ 
+    cout<<"Sum:"<<"                "<<sum<<"    "<<sum1<<"    "<<sum2<<endl;
+    cout<<"Average:"<<"            "<<avg<<"     "<<avg1<<"    "<<avg2<<endl;
+    cout<<"Max:"<<"                "<<Max<<"     "<<Max1<<"     "<<Max2<<endl;
+ 
+ 
+ 
+ 
+ 
+ 
+     int sum3=0;
+ 
+    for(int i=0;i<4;i++)
+        sum3=value1[i]*value1[i]+sum3;
+ 
+    int avg3=sum3/4;
+    int Max3=0;
+ 
+ 
+    for(int i=0;i<4;i++)
+    {
+        float square1=(value1[i]*value1[i])/float(avg3);
+ 
+        cout<<population[i]<<"      "<<crossoverpartner[i]+1<<"        "<<crossoverpoint[i]<<"     "<< newpopulation[i]<<"    "<<value1[i]<<"    "<<value1[i]*value1[i]<<"   "<<square1<<"->"<<round(square1)<<"   "<<endl;
+ 
+        cout<<endl;
+ 
+ 
+ 
+ 
+         if(Max3<value1[i]*value1[i])
+            Max3=value1[i]*value1[i];
+ 
+    }
+ 
+ 
+    cout<<endl<<endl;
+ 
+    cout<<"Sum:"<<"                "<<sum3<<endl;
+    cout<<"Average:"<<"            "<<avg3<<endl;
+    cout<<"Max:"<<"                "<<Max3<<endl;
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+}
+ 
+ 
