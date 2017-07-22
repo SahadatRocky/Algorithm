@@ -1,0 +1,173 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define NL '\n'
+#define SF scanf
+#define PF printf
+#define PC() printf("Case %d: ", caseno++)//NOTES:printf
+
+typedef long long LL;//NOTES:"%lld"
+typedef unsigned long long ULL;//NOTES:"%llu"
+typedef long long int64;//NOTES:int64
+typedef unsigned long long uint64;//NOTES:uint64
+
+#define INF (1 << 31) - 1
+#define MOD 1000000007
+#define pii pair<int, int>
+#define pic pair<int, char>
+#define pci pair<char, int>
+#define pLL pair<LL, LL>
+#define pis pair<int, string>
+#define psi pair<string, int>
+#define pss pair<string, string>
+#define PI 2 * acos(0.0);
+#define EPS 1e-11;
+
+
+
+
+int ToInt(string s) { int r = 0; istringstream sin(s); sin >> r; return r; }//NOTES:ToInt(
+
+
+
+
+const int SIZE = 1e6;
+vector<pii> G[SIZE];
+vector<int> path;
+priority_queue<pii, vector<pii>, greater<pii> > pq;
+int cost[SIZE], parent[SIZE];
+map<char, int> MAP1;
+map<int, int> MAP2;
+map<int, char> MAP3;
+string S;
+
+void UCS(int S, int D)
+{
+	while(!pq.empty())
+		pq.pop();
+
+	cost[S] = 0;
+	pq.push(pii(0 + MAP2[S], S));
+
+	int I, u, v, costUV;
+	while(!pq.empty())
+	{
+		pii temp = pq.top();
+		pq.pop();
+
+		u = temp.second;
+
+		for(I = 0; I < G[u].size(); I++)
+		{
+			v = G[u][I].first;
+			costUV = G[u][I].second + MAP2[v];
+
+			if(cost[u] + costUV < cost[v])
+			{
+				cost[v] = cost[u] + costUV;
+				parent[v] = u;
+				pq.push(pii(cost[v], v));
+			}
+
+		}
+
+	}
+
+}
+
+int main()
+{
+
+
+    int tcases, I, J, K, N, n, m, cnt = 0, len, u, v, w, src, D, E;
+
+
+	//cout << MAP3[1] << NL;
+
+    cin >> N >> E;
+
+
+    for(I = 0; I <= N; I++)
+		cost[I] = INF;
+
+	cnt = 1;
+    for(I = 0; I < E; I++)
+	{
+		cin >> S;
+		//cout << "S = " << S << NL;
+
+		string t = "";
+		for(K = 2; K < S.length(); K++)
+			t += S[K];
+
+		w = ToInt(t);
+
+		//cout << "u = " << u << " v = " << v << " w "<< w << NL;
+
+		if(MAP1[S[0]] == 0)
+		{
+			MAP1[S[0]] = cnt;
+			MAP3[cnt] = S[0];
+			cnt++;
+		}
+
+		if(MAP1[S[1]] == 0)
+		{
+			MAP1[S[1]] = cnt;
+			MAP3[cnt] = S[1];
+			cnt++;
+		}
+
+		u = MAP1[S[0]];
+		v = MAP1[S[1]];
+
+		G[u].push_back(pii(v, w));
+		//G[v].push_back(pii(u, w));
+	}
+
+	for(I = 0; I < N; I++)
+	{
+		cin >> S;
+
+		string t = "";
+		for(K = 1; K < S.length(); K++)
+			t += S[K];
+
+		int h = ToInt(t);
+
+		MAP2[MAP1[S[0]]] = h;
+	}
+
+	string S;
+	cin  >> S;
+
+	src = MAP1[S[0]];
+	D = MAP1[S[1]];
+	//cout << "src = " << src << " D = " << D << NL;
+	UCS(src , D);
+
+	if(cost[D] == INF)
+		cout << "Goal Not Found!\n";
+	else
+		cout << "Cost to Goal Node " << MAP3[D] << " : "  << cost[D] << NL;
+
+    return 0;
+}
+
+/*
+5 7
+SA1
+SB4
+AB2
+BC2
+AC5
+AG12
+CG3
+
+S7
+A6
+B2
+C1
+G0
+
+SG
+*/
